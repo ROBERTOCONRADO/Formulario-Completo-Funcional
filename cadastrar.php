@@ -5,7 +5,39 @@ require('config/conexao.php');
 if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm_password'])) {
 //VERIFICAR SE TODOS OS CAMPOS FORAM PREENCHIDOS
     if(empty($_POST['nomeCompleto']) && empty($_POST['email']) && empty($_POST['password']) && empty($_POST['confirm_password'])  && empty($_POST['termos'])) {
-         
+         $erro_geral = "Todos os campos são obrigatórios!";
+    }else {
+        //RECEBER VALORES VINDO DOS POST E LIMPANDO VÁLORES
+        $nome = limparPost($_POST['nomeCompleto']);
+        $email = limparPost($_POST['email']);
+        $senha = limparPost($_POST['password']);
+        $repete_senha = limparPost($_POST['confirm_password']);
+        $checkbox = limparPost($_POST['termos']);
+
+        //VERIFICAR SE NOME É APENAS LETRAS E ESPAÇOS
+        if (!preg_match("/^[a-zA-Z-' ]*$/",$nome)) {
+            $erro_nome = "Somente letras e espaços em branco!";
+          }
+
+        //VERIFICAR SE EMAIL É VÁLIDO
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $erro_email = "Formato de e-mail inválido!";
+          }
+
+        //VERIFICAR SE SENHA CONTÉM MINIMO 6 DÍGITOS
+        if(strlen($senha) < 6) {
+            $erro_senha = "A senha deve conter no mínimo 6 caracteres!";
+        }
+
+        //VERIFICAR SE SENHAS SÃO IGUAIS
+        if($senha !== $repete_senha) {
+            $erro_repete_senha = "Digite a mesma senha em ambos os campos!";
+        }
+
+        //VERIFICAR SE CHECKBOX FOI MARCADO
+        if($checkbox !== "ok") {
+            $erro_checkbox = "Desativado!";
+        }
     }
 }
 ?>
@@ -26,35 +58,51 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
     <form method="post">
         <h1>Cadastrar</h1>
 
-        <div class="erro-geral animate__animated animate__tada">
-            Avisos de erro!
-        </div>
+        <?php if(isset($erro_geral)) { ?>
+            <div class="erro-geral animate__animated animate__tada">
+            <?php echo $erro_geral; ?>
+            </div>
+        <?php } ?>
 
         <div class="input-group">
             <img class="input-icon" src="./css/img/nome-C.png" alt="login">
-            <input type="text" placeholder="Nome Completo" name="nomeCompleto" required>
-            <div class="erro">Insira um nome valido</div>
+            <input <?php if(isset($erro_geral) or isset($erro_nome)){echo 'class="erro-input"';}?> type="text" placeholder="Nome Completo" name="nomeCompleto" required>
+            <?php if(isset($erro_nome)){ ?>
+            <div class="erro"><?php echo $erro_nome; ?></div>
+            <?php } ?>
         </div>
 
         <div class="input-group">
             <img class="input-icon" src="./css/img/email.png" alt="login">
-            <input type="email" placeholder="Seu melhor Email" name="email" required>
+            <input <?php if(isset($erro_geral) or isset($erro_email)){echo 'class="erro-input"';}?> type="email" placeholder="Seu melhor Email" name="email" required>
+            <?php if(isset($erro_email)){ ?>
+            <div class="erro"><?php echo $erro_email; ?></div>
+            <?php } ?>
         </div>
 
         <div class="input-group">
             <img class="input-icon" src="./css/img/senha1.png" alt="login">
-            <input type="password" placeholder="Digite uma Senha" name="password"
+            <input <?php if(isset($erro_geral) or isset($erro_senha)){echo 'class="erro-input"';}?> type="password" placeholder="Digite uma Senha" name="password"
             required>
+            <?php if(isset($erro_senha)){ ?>
+            <div class="erro"><?php echo $erro_senha; ?></div>
+            <?php } ?>
         </div>
 
         <div class="input-group">
             <img class="input-icon" src="./css/img/senha2.png" alt="login">
-            <input type="password" placeholder="Confirmar Senha"
+            <input <?php if(isset($erro_geral) or isset($erro_repete_senha)){echo 'class="erro-input"';}?> type="password" placeholder="Confirmar Senha"
             name="confirm_password" required>
+            <?php if(isset($erro_repete_senha)){ ?>
+            <div class="erro"><?php echo $erro_repete_senha; ?></div>
+            <?php } ?>
         </div>
 
-        <div class="input-group">
+        <div <?php if(isset($erro_geral) or isset($erro_checkbox)){echo 'class="input-group erro-input"';}else{'class="input-group"';}?>>
             <input type="checkbox" name="termos" id="termos" value="ok" required>
+            <?php if(isset($erro_checkbox)){ ?>
+            <div class="erro"><?php echo $erro_checkbox; ?></div>
+            <?php } ?>
             <label for="termos">
                 Ao se cadastrar você concorda com a nossa <a href="#" class="link">Política de Privacidade</a> e os <a href="#" class="link" >Termos de uso.</a>
             </label>
