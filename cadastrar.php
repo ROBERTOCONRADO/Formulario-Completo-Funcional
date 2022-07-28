@@ -11,6 +11,7 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
         $nome = limparPost($_POST['nomeCompleto']);
         $email = limparPost($_POST['email']);
         $senha = limparPost($_POST['password']);
+        $senha_cript = sha1($senha);
         $repete_senha = limparPost($_POST['confirm_password']);
         $checkbox = limparPost($_POST['termos']);
 
@@ -37,6 +38,31 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
         //VERIFICAR SE CHECKBOX FOI MARCADO
         if($checkbox !== "ok") {
             $erro_checkbox = "Desativado!";
+        }
+
+        if(!isset($erro_geral) && !isset($erro_nome) && !isset($erro_email) && !isset($erro_senha) && !isset($erro_repete_senha) && !isset($erro_checbox)) {
+
+            //VERIFICAR SE EMAIL JÁ ESTÁ CADASTRADO NO BANCO
+            $sql = $pdo->prepare("SELECT * FROM usuarios WHERE email=? LIMIT 1");
+            $sql->execute(array($email));
+            $usuario = $sql->fetch();
+
+            //SE NÃO EXISTIR USUARIO - ADICIONAR NO BANCO
+            if(!$usuario) {
+                $recupera_senha = "";
+                $token = "";
+                $status = "novo";
+                $data_cadastro = date("d/m/Y");
+
+                $sql = $pdo->prepare("INSERT INTO usuarios VALUES (null,?,?,?,?,?,?,?)");
+                
+                if($sql->execute(array($nome,$email,$senha_cript,$recupera_senha,$token,$status,$data_cadastro))){
+                    header('location: index.php');
+                }
+            }else{
+            //JÁ EXISTE USUARIO - APRESENTAR ERRO
+                $erro_geral = "Usuário já cadastrado";     
+            }    
         }
     }
 }
@@ -66,7 +92,7 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
 
         <div class="input-group">
             <img class="input-icon" src="./css/img/nome-C.png" alt="login">
-            <input <?php if(isset($erro_geral) or isset($erro_nome)){echo 'class="erro-input"';}?> type="text" placeholder="Nome Completo" name="nomeCompleto" required>
+            <input <?php if(isset($erro_geral) or isset($erro_nome)){echo 'class="erro-input"';}?> type="text" placeholder="Nome Completo" name="nomeCompleto" <?php if(isset($_POST['nomeCompleto'])){echo "value='$nome'";}?> required>
             <?php if(isset($erro_nome)){ ?>
             <div class="erro"><?php echo $erro_nome; ?></div>
             <?php } ?>
@@ -74,7 +100,7 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
 
         <div class="input-group">
             <img class="input-icon" src="./css/img/email.png" alt="login">
-            <input <?php if(isset($erro_geral) or isset($erro_email)){echo 'class="erro-input"';}?> type="email" placeholder="Seu melhor Email" name="email" required>
+            <input <?php if(isset($erro_geral) or isset($erro_email)){echo 'class="erro-input"';}?> type="email" placeholder="Seu melhor Email" name="email" <?php if(isset($_POST['email'])){echo "value='$email'";}?> required>
             <?php if(isset($erro_email)){ ?>
             <div class="erro"><?php echo $erro_email; ?></div>
             <?php } ?>
@@ -82,8 +108,7 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
 
         <div class="input-group">
             <img class="input-icon" src="./css/img/senha1.png" alt="login">
-            <input <?php if(isset($erro_geral) or isset($erro_senha)){echo 'class="erro-input"';}?> type="password" placeholder="Digite uma Senha" name="password"
-            required>
+            <input <?php if(isset($erro_geral) or isset($erro_senha)){echo 'class="erro-input"';}?> type="password" placeholder="Digite uma Senha" name="password" required>
             <?php if(isset($erro_senha)){ ?>
             <div class="erro"><?php echo $erro_senha; ?></div>
             <?php } ?>

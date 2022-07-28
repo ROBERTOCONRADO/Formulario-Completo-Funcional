@@ -117,7 +117,7 @@ label {
 }
 
 .erro-input {
-    border: 1px solid rgba(255, 0, 0, 0.767);;
+    border: 1px solid rgba(255, 0, 0, 0.767);
 }
 
 .erro {
@@ -125,4 +125,5 @@ label {
     text-align: center;
     margin-bottom: 10px;
     font-weight: 600;
+    font-size: 8px;
 }
