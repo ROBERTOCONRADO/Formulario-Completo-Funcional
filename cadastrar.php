@@ -40,28 +40,28 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
             $erro_checkbox = "Desativado!";
         }
 
-        if(!isset($erro_geral) && !isset($erro_nome) && !isset($erro_email) && !isset($erro_senha) && !isset($erro_repete_senha) && !isset($erro_checbox)) {
+        if(!isset($erro_geral) && !isset($erro_nome) && !isset($erro_email) && !isset($erro_senha) && !isset($erro_repete_senha) && !isset($erro_checkbox)) {
 
             //VERIFICAR SE EMAIL JÁ ESTÁ CADASTRADO NO BANCO
             $sql = $pdo->prepare("SELECT * FROM usuarios WHERE email=? LIMIT 1");
             $sql->execute(array($email));
-            $usuario = $sql->fetch();
+            $user = $sql->fetch();
 
-            //SE NÃO EXISTIR USUARIO - ADICIONAR NO BANCO
-            if(!$usuario) {
+            //SE NÃO EXISTIR USUARIO - ADICIONAR AO BANCO
+            if(!$user) {
                 $recupera_senha = "";
                 $token = "";
                 $status = "novo";
-                $data_cadastro = date("d/m/Y");
+                $data_cadastro = date('d/m/Y');
 
                 $sql = $pdo->prepare("INSERT INTO usuarios VALUES (null,?,?,?,?,?,?,?)");
                 
                 if($sql->execute(array($nome,$email,$senha_cript,$recupera_senha,$token,$status,$data_cadastro))){
-                    header('location: index.php');
+                    header('location: index.php?result=ok');
                 }
             }else{
             //JÁ EXISTE USUARIO - APRESENTAR ERRO
-                $erro_geral = "Usuário já cadastrado";     
+                $erro_geral = "Usuário já cadastrado!";     
             }    
         }
     }
