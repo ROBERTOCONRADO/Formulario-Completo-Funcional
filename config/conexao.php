@@ -31,4 +31,19 @@ function limparPost($dados) {
     $dados = htmlspecialchars($dados);
     return $dados;
 }
+
+function auth($tokenSession) {
+    global $pdo;
+    //VERIFICAR SE TEM AUTORIZAÇÃO
+    $sql = $pdo->prepare("SELECT * FROM usuarios WHERE token=? LIMIT 1");
+    $sql->execute(array($tokenSession));
+    $usuario = $sql->fetch(PDO::FETCH_ASSOC);
+
+    //SE NÃO ENCONTAR USUARIO
+    if(!$usuario) {
+        return false; 
+    }else {
+        return $usuario;
+    }
+}
 ?>
