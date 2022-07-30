@@ -7,7 +7,9 @@ body {
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
-    background-color: #eeeeee;
+    background-image: url(/midea/background-login.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
     margin: 0;
     width: 100vw;
     height: 100vh;

@@ -1,5 +1,33 @@
 <?php
 require('config/conexao.php');
+
+if(isset($_POST['email']) && (isset($_POST['senha']) && !empty($_POST['email'])) && !empty($_POST['senha'])) {
+    //RECEBER OS DADOS VINDO DO POST E LIMPAR
+    $email = limparPost($_POST['email']);
+    $senha = limparPost($_POST['senha']);
+    $senha_cript = sha1($senha);
+
+    //VERIFICAR SE EXISTE ESSE USUÁRIO
+    $sql = $pdo->prepare("SELECT * FROM usuarios WHERE email=? AND senha=? LIMIT 1");
+    $sql->execute(array($email, $senha_cript));
+    $usuario = $sql->fetch(PDO::FETCH_ASSOC);
+
+    if($usuario) {
+        //EXISTE O USUÁRIO
+        //CRIANDOUM TOKEN CRIPTOGRAFADO COM DIA,MÊS,ANO,HORA,MINUTO E SEGUNDO
+        $token = sha1(uniqid().date('d-m-Y-H-i-s'));
+
+        //ATUALIZAR O TOKEN DO USUÁRIO NO BANCO
+        $sql = $pdo->prepare("UPDATE usuarios SET token=? WHERE email=? AND senha=?");
+        if($sql->execute(array($token, $email, $senha_cript))) {
+            //ARMAZENAR TOKEN NA SESSION 
+            $_SESSION['TOKEN'] = $token;
+            header('location: restrito.php');
+        }
+    }else {
+        $erro_login = "Usuário ou senha incorretos!";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -14,7 +42,7 @@ require('config/conexao.php');
     <title>Login</title>
 </head>
 <body>
-    <form action="">
+    <form method="post">
         <h1>Login</h1>
         <!--Condição para que apareça a div-->
         <?php if (isset($_GET['result']) && ($_GET['result']== "ok")) { ?>
@@ -22,22 +50,25 @@ require('config/conexao.php');
             Usuário Cadastrado com sucesso!
             </div>
         <?php }?>
-        
-        
-        
 
+        <?php if(isset($erro_login)) { ?>
+            <div class="erro-geral animate__animated animate__tada">
+            <?php echo $erro_login; ?>
+            </div>
+        <?php } ?>
+        
         <div class="input-group">
             <img class="input-icon" src="./css/img/login.png" alt="login">
-            <input type="text" placeholder="Nome Completo">
+            <input type="text" placeholder="Digite seu email" name="email" required>
         </div>
 
         <div class="input-group">
             <img class="input-icon" src="./css/img/lock.png" alt="password">
-            <input type="password" placeholder="Digite sua senha">
+            <input type="password" placeholder="Digite sua senha" name="senha" required>
         </div>
         
         <button class="btn-blue" type="submit">Fazer Login</button>
-        <a href="cadastrar.php">Ainda não tenho cadastro</a>
+        <a href="cadastrar.php">Ainda não tenho cadastro?</a>
     </form>
     <!--Chamando o jQuery-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
