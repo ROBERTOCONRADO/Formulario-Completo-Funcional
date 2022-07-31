@@ -57,7 +57,16 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
                 $sql = $pdo->prepare("INSERT INTO usuarios VALUES (null,?,?,?,?,?,?,?)");
                 
                 if($sql->execute(array($nome,$email,$senha_cript,$recupera_senha,$token,$status,$data_cadastro))){
-                    header('location: index.php?result=ok');
+                    //SE O MODO FOR LOCAL
+                    if($modo == "local") {
+                        header('location: index.php?result=ok');
+                    }
+                    //SE O MODO FOR PRODUCAO
+                    if($modo == "producao") {
+                        
+
+                    }
+
                 }
             }else{
             //JÁ EXISTE USUARIO - APRESENTAR ERRO

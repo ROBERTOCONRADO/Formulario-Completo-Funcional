@@ -14,16 +14,22 @@ if(isset($_POST['email']) && (isset($_POST['senha']) && !empty($_POST['email']))
 
     if($usuario) {
         //EXISTE O USUÁRIO
-        //CRIANDOUM TOKEN CRIPTOGRAFADO COM DIA,MÊS,ANO,HORA,MINUTO E SEGUNDO
-        $token = sha1(uniqid().date('d-m-Y-H-i-s'));
+        //VERIFICAR SE O CADASTRO FOI CONFIRMADO
+        if($usuario['status'] == "confirmado") {
+            //CRIANDO UM TOKEN CRIPTOGRAFADO COM DIA,MÊS,ANO,HORA,MINUTO E SEGUNDO
+            $token = sha1(uniqid().date('d-m-Y-H-i-s'));
 
         //ATUALIZAR O TOKEN DO USUÁRIO NO BANCO
-        $sql = $pdo->prepare("UPDATE usuarios SET token=? WHERE email=? AND senha=?");
-        if($sql->execute(array($token, $email, $senha_cript))) {
+            $sql = $pdo->prepare("UPDATE usuarios SET token=? WHERE email=? AND senha=?");
+            if($sql->execute(array($token, $email, $senha_cript))) {
             //ARMAZENAR TOKEN NA SESSION 
             $_SESSION['TOKEN'] = $token;
             header('location: restrito.php');
+            }
+        }else {
+            $erro_login = "Confirme o cadastro no seu email";
         }
+
     }else {
         $erro_login = "Usuário ou senha incorretos!";
     }
@@ -52,7 +58,7 @@ if(isset($_POST['email']) && (isset($_POST['senha']) && !empty($_POST['email']))
         <?php }?>
 
         <?php if(isset($erro_login)) { ?>
-            <div class="erro-geral animate__animated animate__tada">
+            <div  style="text-align:center" class="erro-geral animate__animated animate__tada">
             <?php echo $erro_login; ?>
             </div>
         <?php } ?>
