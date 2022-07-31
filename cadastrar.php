@@ -51,20 +51,37 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
             if(!$user) {
                 $recupera_senha = "";
                 $token = "";
+                $codigo_confirmacao = uniqid();
                 $status = "novo";
                 $data_cadastro = date('d/m/Y');
 
-                $sql = $pdo->prepare("INSERT INTO usuarios VALUES (null,?,?,?,?,?,?,?)");
+                $sql = $pdo->prepare("INSERT INTO usuarios VALUES (null,?,?,?,?,?,?,?,?)");
                 
-                if($sql->execute(array($nome,$email,$senha_cript,$recupera_senha,$token,$status,$data_cadastro))){
+                if($sql->execute(array($nome,$email,$senha_cript,$recupera_senha,$token,$codigo_confirmacao,$status,$data_cadastro))){
                     //SE O MODO FOR LOCAL
                     if($modo == "local") {
                         header('location: index.php?result=ok');
                     }
                     //SE O MODO FOR PRODUCAO
                     if($modo == "producao") {
+                        //ENVIAR E-MAIL PARA USUARIO 
+                        $mail = new PHPMailer(true);    
                         
+                        try {
+                            //RECIPIENTS
+                            $mail->setFrom('sistema@sistema.com', 'sistema de login');//QUEM MANDA O E-MAIL
+                            $mail->addAddress($email, $nome);
 
+                             //Content
+                            $mail->isHTML(true); //CORPO DO E-MAIL COM HTML
+                            $mail->Subject = 'Confirme seu cadastro!';//TITULO DO E_MAIL
+                            $mail->Body    = '<h1>Por favor confirme seu e-mail abaixo:</h1><br><br><a style="background: green; padding: 10px; cursor:pointer; color: white; border-radius: 5px; text-decoration: none;" href="http://seusitema.com.br/confirmacao.php?cod_confirm='.$codigo_confirmacao.'">Confirmar E-mail</a>';
+
+                            $mail->send();
+                            header('location: obrigado.php');
+
+                        } catch (Exception $e) {
+                            echo "Ouve um problema ao enviar o e-mail de confirmação.: {$mail->ErrorInfo}";
                     }
 
                 }
