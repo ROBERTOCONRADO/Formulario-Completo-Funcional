@@ -37,7 +37,7 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
 
         //VERIFICAR SE CHECKBOX FOI MARCADO
         if($checkbox !== "ok") {
-            $erro_checkbox = "Desativado!";
+            $erro_checkbox = "Aceite os termos!";
         }
 
         if(!isset($erro_geral) && !isset($erro_nome) && !isset($erro_email) && !isset($erro_senha) && !isset($erro_repete_senha) && !isset($erro_checkbox)) {
