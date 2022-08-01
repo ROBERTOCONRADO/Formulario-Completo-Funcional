@@ -7,7 +7,7 @@ body {
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
-    background-image: url(/midea/background-login.jpeg);
+    background-color: #3fb0d3;
     background-repeat: no-repeat;
     background-size: cover;
     margin: 0;
@@ -146,11 +146,13 @@ label {
 }
 
 .gmail {
-    background-color: red;
-    color: #008d1a;
-    padding: 20px;
+    background-color: #008d1a;
+    color: white;
+    padding: 10px;
     border-radius: 5px;
+    width: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 10px auto;
 }

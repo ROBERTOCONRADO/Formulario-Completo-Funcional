@@ -92,6 +92,7 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
         }
     }
 }
+}
 ?>
 
 <!DOCTYPE html>
