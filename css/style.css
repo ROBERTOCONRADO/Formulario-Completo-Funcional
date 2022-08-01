@@ -156,3 +156,8 @@ label {
     align-items: center;
     margin: 10px auto;
 }
+
+.gmail:hover {
+    background-color: #006813;
+    color: rgb(255, 255, 255);
+}

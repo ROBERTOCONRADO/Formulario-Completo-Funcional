@@ -75,7 +75,7 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
                              //Content
                             $mail->isHTML(true); //CORPO DO E-MAIL COM HTML
                             $mail->Subject = 'Confirme seu cadastro!';//TITULO DO E_MAIL
-                            $mail->Body    = '<h1>Por favor confirme seu e-mail abaixo:</h1><br><br><a style="background: green; padding: 10px; cursor:pointer; color: white; border-radius: 5px; text-decoration: none;" href="http://seusitema.com.br/confirmacao.php?cod_confirm='.$codigo_confirmacao.'">Confirmar E-mail</a>';
+                            $mail->Body = '<h1>Por favor confirme seu e-mail abaixo:</h1><br><br><a style="background: green; padding: 10px; cursor:pointer; color: white; border-radius: 5px; text-decoration: none;" href="http://seusitema.com.br/confirmacao.php?cod_confirm='.$codigo_confirmacao.'">Confirmar E-mail</a>';
 
                             $mail->send();
                             header('location: obrigado.php');
