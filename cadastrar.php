@@ -45,10 +45,10 @@ if(isset($_POST['nomeCompleto']) && isset($_POST['email']) && isset($_POST['pass
             //VERIFICAR SE EMAIL JÁ ESTÁ CADASTRADO NO BANCO
             $sql = $pdo->prepare("SELECT * FROM usuarios WHERE email=? LIMIT 1");
             $sql->execute(array($email));
-            $user = $sql->fetch();
+            $usuario = $sql->fetch();
 
             //SE NÃO EXISTIR USUARIO - ADICIONAR AO BANCO
-            if(!$user) {
+            if(!$usuario) {
                 $recupera_senha = "";
                 $token = "";
                 $codigo_confirmacao = uniqid();

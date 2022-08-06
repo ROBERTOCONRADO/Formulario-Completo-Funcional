@@ -7,7 +7,9 @@ body {
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
-    background-color: #3fb0d3;
+    background-image: url(../midea/background-login.jpeg);
+    background-attachment: scroll;
+    background-position: bottom;
     background-repeat: no-repeat;
     background-size: cover;
     margin: 0;
@@ -22,7 +24,7 @@ form {
     align-items: center;
     justify-content: center;
     max-width: 400px;
-    background-color: #ffffff;
+    background-color: #ffffff69;
     border-radius: 30px;
     padding: 20px 20px 20px;
     box-shadow: 0px 0px 20px #bebebe;
@@ -43,6 +45,7 @@ input {
     margin-bottom: 15px;
     padding-left: 20%;
     margin-left: 5%;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 input:focus {
@@ -76,6 +79,8 @@ a {
 
 a:hover {
     color: #00c3ff;
+    text-shadow: 0px 0px 3px black;
+    box-sizing: border-box;
 }
 
 .link {

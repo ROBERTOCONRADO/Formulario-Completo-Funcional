@@ -1,7 +1,7 @@
 <?php
 require('config/conexao.php');
 
-if(isset($_POST['email']) && (isset($_POST['senha']) && !empty($_POST['email'])) && !empty($_POST['senha'])) {
+if(isset($_POST['email']) && isset($_POST['senha']) && !empty($_POST['email']) && !empty($_POST['senha'])) {
     //RECEBER OS DADOS VINDO DO POST E LIMPAR
     $email = limparPost($_POST['email']);
     $senha = limparPost($_POST['senha']);
@@ -51,11 +51,11 @@ if(isset($_POST['email']) && (isset($_POST['senha']) && !empty($_POST['email']))
     <form method="post">
         <h1>Login</h1>
         <!--Condição para que apareça a div-->
-        <?php if (isset($_GET['result']) && ($_GET['result']== "ok")) { ?>
+        <?php if (isset($_GET['result']) && ($_GET['result'] == "ok")) { ?>
             <div class="sucesso animate__animated animate__rubberBand">
             Usuário Cadastrado com sucesso!
             </div>
-        <?php }?>
+        <?php } ?>
 
         <?php if(isset($erro_login)) { ?>
             <div  style="text-align:center" class="erro-geral animate__animated animate__tada">
@@ -74,7 +74,7 @@ if(isset($_POST['email']) && (isset($_POST['senha']) && !empty($_POST['email']))
         </div>
         
         <button class="btn-blue" type="submit">Fazer Login</button>
-        <a href="cadastrar.php">Ainda não tenho cadastro?</a>
+        <a class="fazerCadastro" href="cadastrar.php">Ainda não tenho cadastro?</a>
     </form>
     <!--Chamando o jQuery-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
